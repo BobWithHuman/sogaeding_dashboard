@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>With Human · Security Observatory</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 이동</a>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">W</span><span>With Human</span></div>
+      <div class="workspace"><span>Workspace</span><strong>Local runtime</strong></div>
+      <nav aria-label="주요 화면">
+        <button class="nav-item active" data-view="overview"><span>⌁</span>Overview</button>
+        <button class="nav-item" data-view="events"><span>≡</span>Tool calls</button>
+        <button class="nav-item" data-view="asks"><span>?</span>ASK lifecycle</button>
+        <button class="nav-item" data-view="security"><span>◇</span>Security audit</button>
+      </nav>
+      <div class="sidebar-status">
+        <span class="status-dot" id="sidebarDot"></span>
+        <div><strong id="sidebarState">Connecting</strong><small>read-only console</small></div>
+      </div>
+    </aside>
+
+    <main id="content">
+      <header class="topbar">
+        <div><p class="crumb">With Human / <span id="crumb">Overview</span></p><h1 id="pageTitle">Security overview</h1></div>
+        <div class="top-actions">
+          <span class="last-updated" id="updated">아직 조회하지 않음</span>
+          <button class="primary-button" id="refresh">↻ Refresh</button>
+        </div>
+      </header>
+
+      <section class="notice" id="notice" aria-live="polite"><span class="pulse"></span><span id="connectionNotice">엔진에 연결하는 중입니다.</span></section>
+      <section class="error-slot" id="error" aria-live="assertive"></section>
+
+      <section class="filterbar" aria-label="조회 필터">
+        <label><span>Time range</span><select id="period"><option value="1">Last 1 hour</option><option value="6">Last 6 hours</option><option value="24" selected>Last 24 hours</option><option value="72">Last 3 days</option><option value="168">Last 7 days</option></select></label>
+        <label><span>Tool</span><select id="tool"><option value="">All tools</option><option>read_file</option><option>write_file</option></select></label>
+        <label><span>Decision</span><select id="decision"><option value="">All decisions</option><option>ALLOW</option><option>DENY</option><option>ASK</option><option>UNKNOWN</option></select></label>
+        <label><span>Outcome</span><select id="outcome"><option value="">All outcomes</option><option>SUCCEEDED</option><option>REPORTED_ERROR</option><option>NOT_EXECUTED</option><option>IN_PROGRESS</option><option>UNKNOWN</option></select></label>
+        <label class="reason-filter"><span>Reason</span><select id="reason"><option value="">All reasons</option></select></label>
+      </section>
+
+      <section id="overviewView" class="view">
+        <div class="metrics" id="metrics" aria-label="핵심 지표"></div>
+        <div class="grid grid-main">
+          <article class="panel chart-panel">
+            <div class="panel-head"><div><span class="eyebrow">DECISION VOLUME</span><h2>Policy decisions over time</h2></div><div class="legend"><span class="allow">ALLOW</span><span class="deny">DENY</span><span class="ask">ASK</span></div></div>
+            <div id="chart" class="chart" role="img" aria-label="시간별 판정 추이"></div>
+          </article>
+          <article class="panel health-panel">
+            <div class="panel-head"><div><span class="eyebrow">SYSTEM HEALTH</span><h2>Runtime services</h2></div></div>
+            <div id="services" class="services"></div>
+          </article>
+        </div>
+        <div class="grid grid-secondary">
+          <article class="panel"><div class="panel-head"><div><span class="eyebrow">EFFECTIVE DECISIONS</span><h2>Decision distribution</h2></div></div><div id="distribution"></div></article>
+          <article class="panel"><div class="panel-head"><div><span class="eyebrow">HUMAN REVIEW</span><h2>ASK pipeline</h2></div></div><div id="askPipeline"></div></article>
+          <article class="panel"><div class="panel-head"><div><span class="eyebrow">SEMANTIC ANALYSIS</span><h2>Jev usage ledger</h2></div></div><div id="jevLedger"></div></article>
+        </div>
+      </section>
+
+      <section id="eventsView" class="view hidden">
+        <article class="panel table-panel">
+          <div class="panel-head"><div><span class="eyebrow">RETAINED EVENTS</span><h2 id="eventHeading">Tool call history</h2></div><span class="record-count" id="eventCount">0 records</span></div>
+          <div class="table-wrap"><table><thead><tr><th>TIME</th><th>TOOL / TARGET</th><th>DECISION</th><th>EXECUTION</th><th>ROUTING</th><th></th></tr></thead><tbody id="eventRows"></tbody></table></div>
+          <div class="pagination"><span id="pageInfo">0 records</span><div><button id="prev">← Previous</button><button id="next">Next →</button></div></div>
+        </article>
+      </section>
+
+      <section id="securityView" class="view hidden">
+        <div class="security-layout">
+          <article class="panel alerts-panel"><div class="panel-head"><div><span class="eyebrow">ACTIVE SIGNALS</span><h2>Security alerts</h2></div></div><div id="alerts"></div></article>
+          <article class="panel table-panel"><div class="panel-head"><div><span class="eyebrow">AUDIT TRAIL</span><h2>Security events</h2></div><span class="record-count" id="securityCount">0 records</span></div><div class="table-wrap"><table><thead><tr><th>TIME</th><th>ACTION</th><th>ACTOR HASH</th><th>RESOURCE HASH</th><th>RESULT</th></tr></thead><tbody id="securityRows"></tbody></table></div></article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="detail"><div class="dialog-head"><div><span class="eyebrow">EVENT INSPECTOR</span><h2>Tool call detail</h2></div><button id="close" aria-label="상세 닫기">×</button></div><div id="detailBody"></div></dialog>
+  <script src="/app.js" defer></script>
+</body>
+</html>
